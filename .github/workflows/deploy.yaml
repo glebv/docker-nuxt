@@ -9,12 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-      - run: docker build -t gving/react-test -f Dockerfile.dev .
-      - run: docker run -e CI=true gving/react-test npm test
+      - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} --password-stdin
+      - run: docker build -t gving/docker-nuxt-test -f Dockerfile.dev .
+      - run: docker run -e CI=true gving/docker-nuxt-test npm test
  
       - name: Generate deployment package
-        run: zip -r deploy.zip . -x '*.git*'
+        run: zip -r deploy.zip ./dist -x '*.git*'
  
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v20
