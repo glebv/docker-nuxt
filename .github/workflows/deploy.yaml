@@ -10,8 +10,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Testing  
       - run: docker build -t gving/docker-nuxt-test -f Dockerfile.dev .
       - run: docker run -e CI=true gving/docker-nuxt-test npm test
+
+      - name: Building
+      - run: docker build -t gving/docker-nuxt -f Dockerfile .
+      - run: docker run -e CI=true gving/docker-nuxt-test npm run build
  
       - name: Generate deployment package
         run: zip -r deploy.zip ./dist -x '*.git*'
